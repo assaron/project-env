@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+help()
+{
+    echo "usage: $0 <options> <project-dir>"
+    echo "-w|--work-directory <work-directory>; optional"
+}
+
+if [ $# -eq 0 ]; then
+    help
+    exit
+fi
+while true; do
+    case "$1" in
+        -w|--work-directory) workdir="$2"; shift 2;;
+        -*) die "unrecognized option: $1";;
+        *) break;;
+    esac
+done
+
+projectdir="$1"
+
+mkdir "$projectdir"
+
+cd "$projectdir"
+
+ln -s "$workdir" work
+
+git init
+
+cat - > .gitignore <<END
+.Rproj.user
+.Rhistory
+.RData
+work
+END
+
+git add .gitignore
+git commit -m "initial commit"
