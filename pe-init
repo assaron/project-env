@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e 
+
 help()
 {
     echo "usage: $0 <options> <project-dir>"
@@ -10,6 +12,7 @@ if [ $# -eq 0 ]; then
     help
     exit
 fi
+
 while true; do
     case "$1" in
         -w|--work-directory) workdir="$2"; shift 2;;
@@ -20,13 +23,13 @@ done
 
 projectdir="$1"
 
-mkdir "$projectdir"
+ssh poni  "mkdir '$projectdir' && cd '$projectdir' && git init --bare"
+
+git clone poni:"$projectdir"
 
 cd "$projectdir"
 
 ln -s "$workdir" work
-
-git init
 
 cat - > .gitignore <<END
 .Rproj.user
@@ -35,5 +38,7 @@ cat - > .gitignore <<END
 work
 END
 
+
 git add .gitignore
 git commit -m "initial commit"
+git push --set-upstream origin master
