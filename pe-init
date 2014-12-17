@@ -36,8 +36,15 @@ cat - > .gitignore <<END
 .Rhistory
 .RData
 work
+cache*
+figure*
+*.html
+*.md
+*.Rproj
 END
 
+
+git submodule add https://github.com/assaron/r-utils
 
 git add .gitignore
 git commit -m "initial commit"
